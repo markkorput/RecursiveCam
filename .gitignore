@@ -1,1 +1,2 @@
-bin/*
+bin/BaseAppDebug.app
+bin/data/log.txt
