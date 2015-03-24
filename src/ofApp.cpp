@@ -81,7 +81,7 @@ void ofApp::update(){
 
         // TODO: perform post-param-change updates
         ofSetFullscreen(RUI_VAR(bool, "app-fullscreen"));
-        
+
         ofVec2f newSize(RUI_VAR(int, "width"), RUI_VAR(int, "height"));
         if(newSize != camSize){
             camSize.set(RUI_VAR(int, "width"), RUI_VAR(int, "height"));
@@ -96,7 +96,7 @@ void ofApp::update(){
         //    ofSetFrameRate(RUI_VAR(int, "fps"));
         //}
         frameTime = 1.0/RUI_VAR(int, "fps");
-        
+
         ofEnableBlendMode(chosenBlendmode);
     }
 
@@ -108,9 +108,10 @@ void ofApp::update(){
 
         // draw camera frame (bottom layer) to fbo
         fbo.begin();
-        grabber.draw(0,0);
-        
-        // draw fbo2 (previous frame) on top of camera layer,
+        // if(mirrorHorizontal)
+        grabber.draw(grabber.getWidth(),0, grabber.getWidth()*-1, grabber.getHeight());
+
+        // draw otherfbo (previous frame) on top of camera layer,
         // apply margin, rotation and opacity
         int m = RUI_VAR(int, "margin");
         float t = ofGetElapsedTimef();
@@ -119,22 +120,28 @@ void ofApp::update(){
         ofRotateZ(RUI_VAR(float, "rotateStrength") * sin(t * RUI_VAR(float, "rotateSpeed")));
         ofTranslate(-center);
         ofSetColor(RUI_VAR(int, "opacity"));
+
         bool useVignetteShader = vignetteMaskImage.isAllocated();
+
         if(useVignetteShader){
             vignetteShader.begin();
             vignetteShader.setUniformTexture("imageMask", vignetteMaskImage.getTextureReference(), 1);
         }
+
         fbo2.draw(m,m, camSize.x-2*m, camSize.y-2*m);
-        if(useVignetteShader)
+
+        if(useVignetteShader){
             vignetteShader.end();
+        }
 
         ofPopMatrix();
         fbo.end();
-        fbo2.begin();
-        fbo.draw(0,0);
-        fbo2.end();
+        
+        // copy fbo to fbo2
+        ofPixels pixs;
+        fbo.getTextureReference().readToPixels(pixs);
+        fbo2.getTextureReference().loadData(pixs);
     }
-    
 }
 
 //--------------------------------------------------------------

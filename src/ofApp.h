@@ -23,6 +23,7 @@ public:
 
     ofVideoGrabber grabber;
     ofFbo fbo, fbo2;
+
     ofVec2f camSize;
     float time, timeLastFrame, frameTime;
     
