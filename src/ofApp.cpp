@@ -41,8 +41,12 @@ void ofApp::setup(){
     RUI_DEFINE_VAR_WV(int, "height", 240, 10, 1000);
     RUI_DEFINE_VAR_WV(int, "margin", 10, 0, 500);
     RUI_DEFINE_VAR_WV(int, "fps", 1, 0, 60);
+    RUI_DEFINE_VAR_WV(float, "offsetSpeed", 0.f, 0.f, 1.f);
+    RUI_DEFINE_VAR_WV(float, "xOffset", 0.f, 0.f, 1000.f);
+    RUI_DEFINE_VAR_WV(float, "yOffset", 0.f, 0.f, 1000.f);
     RUI_DEFINE_VAR_WV(float, "rotateSpeed", 0, 0, 1);
     RUI_DEFINE_VAR_WV(float, "rotateStrength", 0, 0, 360);
+    RUI_DEFINE_VAR_WV(float, "tiltStrength", 0, 0, 360);
     RUI_DEFINE_VAR_WV(int, "opacity", 255, 0, 255);
     //build a string list for the UI to show
     string blendmodeOptions[] = {"Disabled", "Alpha", "Add", "Subtract", "Multiply", "Screen"};
@@ -66,9 +70,7 @@ void ofApp::setup(){
         }
     #endif
     
-    if(RUI_VAR(string, "vignette-shader") != ""){
-        vignetteMaskImage.loadImage("vignetteMask.jpg");
-    }
+    offset.set(0.,0.);
 }
 
 //--------------------------------------------------------------
@@ -98,6 +100,12 @@ void ofApp::update(){
         frameTime = 1.0/RUI_VAR(int, "fps");
 
         ofEnableBlendMode(chosenBlendmode);
+        
+        if(RUI_VAR(string, "vignette-shader") != ""){
+            vignetteMaskImage.loadImage("vignetteMask.jpg");
+        } else {
+            vignetteMaskImage.clear();
+        }
     }
 
     // update video grabber (get the latest frame)
@@ -118,7 +126,11 @@ void ofApp::update(){
         ofPushMatrix();
         ofTranslate(center);
         ofRotateZ(RUI_VAR(float, "rotateStrength") * sin(t * RUI_VAR(float, "rotateSpeed")));
+        ofRotateX(RUI_VAR(float, "tiltStrength") * sin(t * RUI_VAR(float, "rotateSpeed")));
         ofTranslate(-center);
+        
+        offset.set(RUI_VAR(float, "xOffset") * sin(t*RUI_VAR(float, "offsetSpeed")), RUI_VAR(float, "yOffset") * sin(t*RUI_VAR(float, "offsetSpeed")));
+        ofTranslate(offset);
         ofSetColor(RUI_VAR(int, "opacity"));
 
         bool useVignetteShader = vignetteMaskImage.isAllocated();

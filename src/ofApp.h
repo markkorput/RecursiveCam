@@ -33,4 +33,5 @@ public:
     ofShader vignetteShader;
     
     ofImage vignetteMaskImage;
+    ofVec2f offset;
 };
