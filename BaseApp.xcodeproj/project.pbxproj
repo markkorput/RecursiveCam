@@ -255,6 +255,8 @@
 		4DB713AD1ABF654F00CDA41D /* tracking.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tracking.hpp; sourceTree = "<group>"; };
 		4DB713AE1ABF654F00CDA41D /* video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = video.hpp; sourceTree = "<group>"; };
 		4DB713B11ABF654F00CDA41D /* opencv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = opencv.a; sourceTree = "<group>"; };
+		4DD304BC1AC1B95B00724BDD /* vignetteShader.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = vignetteShader.frag; sourceTree = "<group>"; };
+		4DD304BD1AC1B95B00724BDD /* vignetteShader.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = vignetteShader.vert; sourceTree = "<group>"; };
 		6641CCF519B0F2CA00375E34 /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
 		6641CCF619B0F2CA00375E34 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../openFrameworks/libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -812,6 +814,24 @@
 			path = osx;
 			sourceTree = "<group>";
 		};
+		4DD304BA1AC1B95300724BDD /* data */ = {
+			isa = PBXGroup;
+			children = (
+				4DD304BB1AC1B95B00724BDD /* shadersGL3 */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
+		4DD304BB1AC1B95B00724BDD /* shadersGL3 */ = {
+			isa = PBXGroup;
+			children = (
+				4DD304BC1AC1B95B00724BDD /* vignetteShader.frag */,
+				4DD304BD1AC1B95B00724BDD /* vignetteShader.vert */,
+			);
+			name = shadersGL3;
+			path = bin/data/shadersGL3;
+			sourceTree = "<group>";
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -876,6 +896,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				4DD304BA1AC1B95300724BDD /* data */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,

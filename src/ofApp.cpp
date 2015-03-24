@@ -44,18 +44,31 @@ void ofApp::setup(){
     RUI_DEFINE_VAR_WV(float, "rotateSpeed", 0, 0, 1);
     RUI_DEFINE_VAR_WV(float, "rotateStrength", 0, 0, 360);
     RUI_DEFINE_VAR_WV(int, "opacity", 255, 0, 255);
-    
-    
     //build a string list for the UI to show
     string blendmodeOptions[] = {"Disabled", "Alpha", "Add", "Subtract", "Multiply", "Screen"};
     chosenBlendmode = OF_BLENDMODE_ALPHA;
     //privide the enum param, loweset enum, highest enum, and the Enum string list
     RUI_SHARE_ENUM_PARAM(chosenBlendmode, OF_BLENDMODE_DISABLED, OF_BLENDMODE_SCREEN, blendmodeOptions);
+    RUI_DEFINE_VAR_WV(string, "vignette-shader", "vignetteMask.jpg");
     RUI_LOAD_FROM_XML();
 
     bRecalcNow = true;
     time=0.f;
     timeLastFrame=0.f;
+    
+    #ifdef TARGET_OPENGLES
+        vignetteShader.load("shadersES2/vignetteShader");
+    #else
+        if(ofIsGLProgrammableRenderer()){
+            vignetteShader.load("shadersGL3/vignetteShader");
+        }else{
+            vignetteShader.load("shadersGL2/vignetteShader");
+        }
+    #endif
+    
+    if(RUI_VAR(string, "vignette-shader") != ""){
+        vignetteMaskImage.loadImage("vignetteMask.jpg");
+    }
 }
 
 //--------------------------------------------------------------
@@ -106,8 +119,15 @@ void ofApp::update(){
         ofRotateZ(RUI_VAR(float, "rotateStrength") * sin(t * RUI_VAR(float, "rotateSpeed")));
         ofTranslate(-center);
         ofSetColor(RUI_VAR(int, "opacity"));
+        bool useVignetteShader = vignetteMaskImage.isAllocated();
+        if(useVignetteShader){
+            vignetteShader.begin();
+            vignetteShader.setUniformTexture("imageMask", vignetteMaskImage.getTextureReference(), 1);
+        }
         fbo2.draw(m,m, camSize.x-2*m, camSize.y-2*m);
-        
+        if(useVignetteShader)
+            vignetteShader.end();
+
         ofPopMatrix();
         fbo.end();
         fbo2.begin();

@@ -28,4 +28,8 @@ public:
     
     ofBlendMode chosenBlendmode;
     ofPoint center;
+    
+    ofShader vignetteShader;
+    
+    ofImage vignetteMaskImage;
 };
