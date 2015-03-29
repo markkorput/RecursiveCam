@@ -72,6 +72,7 @@ void ofApp::setup(){
     #endif
     
     offset.set(0.,0.);
+    source = &grabber;
 }
 
 //--------------------------------------------------------------
@@ -113,15 +114,16 @@ void ofApp::update(){
     }
 
     // update video grabber (get the latest frame)
-    grabber.update();
+    // grabber.update();
+    source->update();
 
-    if (grabber.isFrameNew() && (time-timeLastFrame) > frameTime) {
+    if (source->isFrameNew() && (time-timeLastFrame) > frameTime) {
         timeLastFrame = time;
 
         // draw camera frame (bottom layer) to fbo
         fbo.begin();
         // if(mirrorHorizontal)
-        grabber.draw(grabber.getWidth(),0, grabber.getWidth()*-1, grabber.getHeight());
+        source->draw(source->getWidth(),0, source->getWidth()*-1, source->getHeight());
 
         // draw otherfbo (previous frame) on top of camera layer,
         // apply margin, rotation and opacity
@@ -217,5 +219,13 @@ void ofApp::gotMessage(ofMessage msg){
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
-	
+    if(player.loadMovie(dragInfo.files[0])){
+        source = &player;
+        player.setLoopState(OF_LOOP_NORMAL);
+        player.play();
+        grabber.close();
+    } else {
+        source = &grabber;
+        grabber.initGrabber(camSize.x, camSize.y);
+    }
 }

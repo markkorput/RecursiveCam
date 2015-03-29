@@ -22,6 +22,8 @@ public:
 	void exit();
 
     ofVideoGrabber grabber;
+    ofVideoPlayer player;
+    ofBaseVideoDraws *source;
     ofFbo fbo, fbo2;
 
     ofVec2f camSize;
