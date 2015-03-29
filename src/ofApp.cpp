@@ -29,7 +29,7 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
 
     TIME_SAMPLE_SET_FRAMERATE(60);
-    // TIME_SAMPLE_ENABLE();
+    TIME_SAMPLE_DISABLE();
 
     // setup ofxRemoteUI
     RUI_SETUP();
@@ -37,6 +37,7 @@ void ofApp::setup(){
     // TODO: setup params here
     RUI_NEW_GROUP("App");
     RUI_DEFINE_VAR_WV(bool, "app-fullscreen", false);
+    RUI_DEFINE_VAR_WV(bool, "time-samples", false);
     RUI_DEFINE_VAR_WV(int, "width", 320, 10, 1000);
     RUI_DEFINE_VAR_WV(int, "height", 240, 10, 1000);
     RUI_DEFINE_VAR_WV(int, "margin", 10, 0, 500);
@@ -106,6 +107,9 @@ void ofApp::update(){
         } else {
             vignetteMaskImage.clear();
         }
+        
+        if(RUI_VAR(bool, "time-samples") != TIME_SAMPLE_GET_ENABLED())
+            TIME_SAMPLE_SET_ENABLED(RUI_VAR(bool, "time-samples"));
     }
 
     // update video grabber (get the latest frame)
